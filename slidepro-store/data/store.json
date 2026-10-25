@@ -1,0 +1,59 @@
+{
+  "adminPassword": "admin123",
+  "bank": {
+    "code": "MB",
+    "account": "0365781696",
+    "owner": "DUONG BA HAI QUAN"
+  },
+  "paidOrders": {},
+  "slides": [
+    {
+      "id": "slide_default_1",
+      "title": "BẠO LỰC HỌC ĐƯỜNG",
+      "price": 30000,
+      "category": "education",
+      "pages": 19,
+      "ratio": "16:9 Full HD",
+      "compat": "PowerPoint, Google Slides, Canva",
+      "description": "Tổng màu chủ đạo: Sử dụng sắc xanh lá (green) kết hợp xanh dương (blue) mang lại cảm giác thân thiện, dịu mắt, nghiêm túc nhưng không quá nặng nề, rất phù hợp cho chủ đề tuyên truyền giáo dục học đường.\n\nBố cục: Được chia thành 6 phần logic rõ ràng từ định nghĩa, hình thức, thực trạng, biểu hiện, nguyên nhân đến giải pháp.\n\n- Trình bày dạng sơ đồ tư duy, khối thông tin (block) kết hợp hình ảnh minh họa sinh động.\n- Phù hợp cho sinh viên, giáo viên, hoặc tổ chức giáo dục cần trình bày về chủ đề này.",
+      "previewImages": [],
+      "deliveryType": "link",
+      "deliveryLink": "https://docs.google.com/presentation/d/121kBFknwdSd8gg2gRtqNeLecdTfRKsmg/edit?usp=drive_link&ouid=110278634742153176794&rtpof=true&sd=true",
+      "deliveryFileData": null,
+      "deliveryFileName": null,
+      "createdAt": 1729780000000
+    },
+    {
+      "id": "slide_default_2",
+      "title": "Slide Marketing Kế Hoạch Ra Mắt Sản Phẩm Mới - Product Launch Plan",
+      "price": 45000,
+      "category": "marketing",
+      "pages": 48,
+      "ratio": "16:9 Full HD",
+      "compat": "PowerPoint, Google Slides, Canva",
+      "description": "Bộ slide Marketing chuyên nghiệp dành cho việc trình bày kế hoạch ra mắt sản phẩm mới. Bao gồm đầy đủ các phần:\n\n- Phân tích thị trường & đối thủ cạnh tranh\n- Chiến lược Marketing Mix (4P)\n- Timeline triển khai chi tiết\n- Budget & ROI dự kiến\n- KPIs đo lường hiệu quả\n\nThiết kế hiện đại, màu sắc chuyên nghiệp, phù hợp cho các buổi pitch với ban lãnh đạo.",
+      "previewImages": [],
+      "deliveryType": "link",
+      "deliveryLink": "https://drive.google.com/example2",
+      "deliveryFileData": null,
+      "deliveryFileName": null,
+      "createdAt": 1729780000000
+    },
+    {
+      "id": "slide_default_3",
+      "title": "Slide Giảng Dạy & Khóa Học Online Tương Tác - E-Learning Template",
+      "price": 35000,
+      "category": "education",
+      "pages": 42,
+      "ratio": "16:9 Full HD",
+      "compat": "PowerPoint, Google Slides, Canva",
+      "description": "Template slide giảng dạy hiện đại, tối ưu cho các khóa học online và bài giảng trực tuyến.\n\nĐặc điểm nổi bật:\n- Bố cục rõ ràng, dễ theo dõi trên màn hình\n- Tông màu nhẹ nhàng, không gây mỏi mắt\n- Có sẵn các slide tương tác: Quiz, Q&A, Brainstorm\n- Infographic và biểu đồ minh họa đẹp mắt\n- Phù hợp cho giáo viên, giảng viên, trainer",
+      "previewImages": [],
+      "deliveryType": "link",
+      "deliveryLink": "https://drive.google.com/example3",
+      "deliveryFileData": null,
+      "deliveryFileName": null,
+      "createdAt": 1729780000000
+    }
+  ]
+}

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SlidePro - Kho Template Slide Chuyên Nghiệp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- ===== BANNER TOP ===== -->
+    <div class="top-banner">
+        <div class="banner-content">
+            <span class="banner-badge">TỰ ĐỘNG 100%</span>
+            <span class="banner-text">Quét mã VietQR chuyển khoản - Hệ thống ngân hàng tự động phát hiện số tiền &amp; mở tải file slide lập tức!</span>
+        </div>
+    </div>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header" id="mainHeader">
+        <div class="container header-inner">
+            <a href="#" class="logo" onclick="showStorefront(); return false;">
+                <div class="logo-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-name">SlidePro <span class="logo-store">STORE</span></span>
+                    <span class="logo-slogan">Template Thuyết Trình Bản Quyền</span>
+                </div>
+            </a>
+            <div class="header-search">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Tìm kiếm slide: Pitch Deck, Báo cáo, Đồ án, Marketing..." oninput="handleSearch(this.value)">
+            </div>
+            <nav class="header-nav">
+                <button class="btn-nav active" onclick="showStorefront()">
+                    <i class="fas fa-store"></i> Cửa hàng
+                </button>
+                <button class="btn-nav btn-admin" onclick="showAdminLogin()">
+                    <i class="fas fa-cog"></i> Quản trị & Thêm Slide
+                </button>
+            </nav>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <!-- Mobile menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Tìm kiếm slide..." oninput="handleSearch(this.value)">
+            </div>
+            <button class="btn-nav active" onclick="showStorefront(); closeMobileMenu()">
+                <i class="fas fa-store"></i> Cửa hàng
+            </button>
+            <button class="btn-nav" onclick="showAdminLogin(); closeMobileMenu()">
+                <i class="fas fa-cog"></i> Quản trị & Thêm Slide
+            </button>
+        </div>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main>
+        <!-- STOREFRONT SECTION -->
+        <section id="storefrontSection">
+            <!-- Hero -->
+            <div class="hero">
+                <div class="container">
+                    <div class="hero-badge">
+                        <i class="fas fa-award"></i> Hơn 500+ Mẫu Slide Chuẩn Doanh Nghiệp & Học Thuật
+                    </div>
+                    <h1 class="hero-title">
+                        Nâng Tầm Buổi Thuyết Trình Với <span class="text-gradient">Bộ Slide Đỉnh Cao</span>
+                    </h1>
+                    <p class="hero-desc">
+                        Xem trước các trang slide, thanh toán quét mã QR qua ngân hàng. Hệ thống nhận diện giao dịch tự động và cấp link tải file PowerPoint (.pptx) chỉ trong 3 giây.
+                    </p>
+                    <div class="hero-badges">
+                        <span class="h-badge"><i class="fas fa-check-circle"></i> Xem trước nội dung</span>
+                        <span class="h-badge"><i class="fas fa-qrcode"></i> Quét mã VietQR tự động</span>
+                        <span class="h-badge"><i class="fas fa-gem"></i> Nhận file tải về tức thì</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="container">
+                <div class="filter-section">
+                    <div class="filter-tabs" id="filterTabs">
+                        <button class="filter-tab active" data-category="all" onclick="filterByCategory('all', this)">Tất cả mẫu slide</button>
+                        <button class="filter-tab" data-category="business" onclick="filterByCategory('business', this)">Kinh doanh & Startup</button>
+                        <button class="filter-tab" data-category="finance" onclick="filterByCategory('finance', this)">Tài chính & Doanh nghiệp</button>
+                        <button class="filter-tab" data-category="education" onclick="filterByCategory('education', this)">Giáo dục & Đào tạo</button>
+                        <button class="filter-tab" data-category="marketing" onclick="filterByCategory('marketing', this)">Marketing & Bán hàng</button>
+                    </div>
+                    <div class="filter-count" id="filterCount">Hiển thị 0 mẫu slide</div>
+                </div>
+
+                <!-- Product Grid -->
+                <div class="product-grid" id="productGrid">
+                    <!-- Products will be rendered by JS -->
+                </div>
+                <div class="empty-state" id="emptyState" style="display:none;">
+                    <i class="fas fa-inbox"></i>
+                    <h3>Chưa có sản phẩm nào</h3>
+                    <p>Hãy thêm slide từ trang Quản trị để bắt đầu bán hàng.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADMIN SECTION -->
+        <section id="adminSection" style="display:none;">
+            <div class="container">
+                <div class="admin-header">
+                    <h2><i class="fas fa-shield-alt"></i> Bảng Quản Trị - SlidePro STORE</h2>
+                    <button class="btn btn-outline" onclick="showStorefront()"><i class="fas fa-arrow-left"></i> Quay lại Cửa hàng</button>
+                </div>
+
+                <!-- Admin Add/Edit Form -->
+                <div class="admin-card">
+                    <h3 id="formTitle"><i class="fas fa-plus-circle"></i> Thêm Slide Mới</h3>
+                    <form id="slideForm" onsubmit="handleSlideSubmit(event)">
+                        <input type="hidden" id="editSlideId" value="">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Tiêu đề Slide <span class="required">*</span></label>
+                                <input type="text" id="slideTitle" required placeholder="Ví dụ: Pitch Deck Startup công nghệ">
+                            </div>
+                            <div class="form-group">
+                                <label>Giá tiền (VNĐ) <span class="required">*</span></label>
+                                <input type="number" id="slidePrice" required placeholder="30000" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Danh mục <span class="required">*</span></label>
+                                <select id="slideCategory" required>
+                                    <option value="">-- Chọn danh mục --</option>
+                                    <option value="business">Kinh doanh & Startup</option>
+                                    <option value="finance">Tài chính & Doanh nghiệp</option>
+                                    <option value="education">Giáo dục & Đào tạo</option>
+                                    <option value="marketing">Marketing & Bán hàng</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Số trang slide <span class="required">*</span></label>
+                                <input type="number" id="slidePages" required placeholder="19" min="1">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Tỷ lệ màn hình</label>
+                            <input type="text" id="slideRatio" value="16:9 Full HD" placeholder="16:9 Full HD">
+                        </div>
+                        <div class="form-group">
+                            <label>Tương thích phần mềm</label>
+                            <input type="text" id="slideCompat" value="PowerPoint, Google Slides, Canva" placeholder="PowerPoint, Google Slides, Canva">
+                        </div>
+                        <div class="form-group">
+                            <label>Mô tả chi tiết nội dung & bố cục</label>
+                            <textarea id="slideDesc" rows="5" placeholder="Mô tả chi tiết về nội dung, bố cục, tông màu, bố trí các phần trong slide..."></textarea>
+                        </div>
+
+                        <!-- Preview Images -->
+                        <div class="form-group">
+                            <label><i class="fas fa-images"></i> Ảnh xem trước (Preview Slides)</label>
+                            <div class="upload-area" id="uploadArea">
+                                <input type="file" id="previewImages" multiple accept="image/*" onchange="handleImageUpload(event)" style="display:none;">
+                                <div class="upload-placeholder" onclick="document.getElementById('previewImages').click()">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Kéo thả hoặc bấm để chọn ảnh preview</p>
+                                    <span>Hỗ trợ JPG, PNG, WebP - Ảnh được lưu dạng Base64</span>
+                                </div>
+                            </div>
+                            <div class="preview-thumbs" id="previewThumbs"></div>
+                        </div>
+
+                        <!-- File Delivery -->
+                        <div class="form-group">
+                            <label><i class="fas fa-file-download"></i> Tệp kết quả cho khách hàng</label>
+                            <div class="delivery-options">
+                                <label class="radio-option">
+                                    <input type="radio" name="deliveryType" value="link" checked onchange="toggleDeliveryType()">
+                                    <span class="radio-custom"></span>
+                                    <span>Đường dẫn liên kết ngoài (Link Canva, Google Drive...)</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="deliveryType" value="file" onchange="toggleDeliveryType()">
+                                    <span class="radio-custom"></span>
+                                    <span>Upload file thực tế (.pptx, .zip, .pdf)</span>
+                                </label>
+                            </div>
+                            <div id="deliveryLink" class="delivery-input">
+                                <input type="text" id="slideDeliveryLink" placeholder="https://drive.google.com/... hoặc https://www.canva.com/...">
+                            </div>
+                            <div id="deliveryFile" class="delivery-input" style="display:none;">
+                                <input type="file" id="slideDeliveryFile" accept=".pptx,.zip,.pdf,.ppt,.key" onchange="handleDeliveryFile(event)">
+                                <div id="deliveryFileName" class="file-name-display"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <i class="fas fa-save"></i> Lưu Slide
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="resetForm()">
+                                <i class="fas fa-times"></i> Hủy
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Admin Product List -->
+                <div class="admin-card">
+                    <h3><i class="fas fa-list"></i> Danh sách Slide đang bán</h3>
+                    <div class="admin-table-wrapper">
+                        <table class="admin-table" id="adminTable">
+                            <thead>
+                                <tr>
+                                    <th>Ảnh</th>
+                                    <th>Tiêu đề</th>
+                                    <th>Danh mục</th>
+                                    <th>Giá</th>
+                                    <th>Trang</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminTableBody">
+                                <!-- Rendered by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="admin-empty" id="adminEmpty" style="display:none;">
+                        <i class="fas fa-folder-open"></i>
+                        <p>Chưa có slide nào. Thêm slide mới ở form phía trên.</p>
+                    </div>
+                </div>
+
+                <!-- Bank Settings -->
+                <div class="admin-card">
+                    <h3><i class="fas fa-university"></i> Cài đặt Ngân hàng nhận thanh toán</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Tên ngân hàng</label>
+                            <select id="bankName">
+                                <option value="MB">MB Bank (Quân Đội)</option>
+                                <option value="VCB">Vietcombank</option>
+                                <option value="TCB">Techcombank</option>
+                                <option value="ACB">ACB</option>
+                                <option value="VPB">VPBank</option>
+                                <option value="TPB">TPBank</option>
+                                <option value="STB">Sacombank</option>
+                                <option value="BIDV">BIDV</option>
+                                <option value="CTG">VietinBank</option>
+                                <option value="AGR">Agribank</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Số tài khoản</label>
+                            <input type="text" id="bankAccount" placeholder="0988889999">
+                        </div>
+                        <div class="form-group">
+                            <label>Chủ tài khoản</label>
+                            <input type="text" id="bankOwner" placeholder="NGUYEN VAN QUAN">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveBankSettings()">
+                        <i class="fas fa-save"></i> Lưu Cài Đặt Ngân Hàng
+                    </button>
+
+                    <div style="margin-top: 20px; background: #EEF2FF; border: 1px solid #C7D2FE; padding: 16px; border-radius: 8px;">
+                        <h4 style="color: #4338CA; font-size: 14px; margin-bottom: 6px;"><i class="fas fa-bolt"></i> Cấu Hình Tự Động Với SePay</h4>
+                        <p style="font-size: 13px; color: #475569; margin-bottom: 10px;">Dán link Webhook này vào trang <strong>Webhooks</strong> trên SePay của bạn để hệ thống tự động phát hiện tiền vào và mở khóa file ngay lập tức:</p>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="sepayWebhookUrl" readonly style="background: white; font-weight: 600; font-size: 13px;" value="">
+                            <button type="button" class="btn btn-primary" onclick="copyWebhookUrl()"><i class="fas fa-copy"></i> Copy Link Webhook</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Password Change Settings -->
+                <div class="admin-card">
+                    <h3><i class="fas fa-key"></i> Đổi Mật Khẩu Quản Trị</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Mật khẩu hiện tại <span class="required">*</span></label>
+                            <input type="password" id="oldPassword" placeholder="Nhập mật khẩu hiện tại...">
+                        </div>
+                        <div class="form-group">
+                            <label>Mật khẩu mới (tối thiểu 6 ký tự) <span class="required">*</span></label>
+                            <input type="password" id="newPassword" placeholder="Nhập mật khẩu mới...">
+                        </div>
+                        <div class="form-group">
+                            <label>Xác nhận mật khẩu mới <span class="required">*</span></label>
+                            <input type="password" id="confirmPassword" placeholder="Nhập lại mật khẩu mới...">
+                        </div>
+                    </div>
+                    <div id="passwordMessage" style="margin-bottom: 14px; font-size: 13px; font-weight: 500;"></div>
+                    <button class="btn btn-primary" onclick="changeAdminPassword()">
+                        <i class="fas fa-lock"></i> Cập Nhật Mật Khẩu
+                    </button>
+                </div>
+
+                <!-- Admin Backup & Restore -->
+                <div class="admin-card">
+                    <h3><i class="fas fa-database"></i> Sao Lưu & Khôi Phục Dữ Liệu (Chống Mất Khi Máy Chủ Khởi Động Lại)</h3>
+                    <p style="font-size: 13px; color: var(--text-light); margin-bottom: 16px;">
+                        Render miễn phí sẽ tạm dừng khi không có người truy cập và có thể làm mới bộ nhớ máy chủ. Sử dụng các tính năng dưới đây để bài viết &amp; ảnh của bạn <strong>được lưu mãi mãi không bao giờ mất</strong>:
+                    </p>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
+                        <button type="button" class="btn btn-primary" onclick="exportBackup()">
+                            <i class="fas fa-download"></i> Tải File Sao Lưu (.json) Về Máy
+                        </button>
+                        <button type="button" class="btn btn-outline" onclick="document.getElementById('importBackupFile').click()">
+                            <i class="fas fa-upload"></i> Khôi Phục Từ File Sao Lưu
+                        </button>
+                        <input type="file" id="importBackupFile" accept=".json" style="display: none;" onchange="importBackup(event)">
+                    </div>
+
+                    <div style="background: #F0FDF4; border: 1px solid #BBF7D0; padding: 16px; border-radius: 8px;">
+                        <h4 style="color: #166534; font-size: 14px; margin-bottom: 6px;"><i class="fas fa-cloud"></i> Lưu Trữ Đám Mây Pantry (Vĩnh Viễn Miễn Phí)</h4>
+                        <p style="font-size: 13px; color: #374151; margin-bottom: 10px;">
+                            Kết nối với kho đám mây Pantry để máy chủ tự động lưu và khôi phục 24/7 (khách truy cập lúc nào cũng thấy ảnh dù máy chủ vừa ngủ dậy):
+                        </p>
+                        <div style="display: flex; gap: 8px; max-width: 650px;">
+                            <input type="text" id="pantryIdInput" placeholder="Dán Pantry ID của bạn vào đây..." style="background: white; font-size: 13px;">
+                            <button type="button" class="btn btn-primary" onclick="savePantryId()"><i class="fas fa-cloud-upload-alt"></i> Lưu Cấu Hình Đám Mây</button>
+                        </div>
+                        <p style="font-size: 12px; color: #6B7280; margin-top: 8px;">
+                            Chưa có Pantry ID? Lấy miễn phí không cần thẻ trong 10 giây tại <a href="https://pantry.touchify.co" target="_blank" style="color: #166534; font-weight: 600;">pantry.touchify.co</a> (chỉ cần nhập email nhận ID).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== SLIDE DETAIL MODAL ===== -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content modal-detail">
+            <div class="modal-header-bar">
+                <div class="modal-cat-badge" id="modalCatBadge">Giáo dục & Đào tạo</div>
+                <span class="modal-subtitle">| Chế độ xem trước slide chi tiết</span>
+                <button class="modal-close" onclick="closeDetailModal()">&times;</button>
+            </div>
+            <div class="modal-body-detail">
+                <!-- Left: Preview Slider -->
+                <div class="preview-slider">
+                    <div class="slider-container" id="sliderContainer">
+                        <img src="" alt="Slide Preview" id="sliderImage">
+                        <button class="slider-btn slider-prev" onclick="prevSlide()"><i class="fas fa-chevron-left"></i></button>
+                        <button class="slider-btn slider-next" onclick="nextSlide()"><i class="fas fa-chevron-right"></i></button>
+                        <div class="slider-counter" id="sliderCounter">1 / 1</div>
+                    </div>
+                    <div class="slider-thumbs" id="sliderThumbs"></div>
+                </div>
+                <!-- Right: Info -->
+                <div class="detail-info">
+                    <h2 class="detail-title" id="detailTitle">BẠO LỰC HỌC ĐƯỜNG</h2>
+                    <div class="detail-price-box">
+                        <div class="price-label">Giá thanh toán trọn bộ:</div>
+                        <div class="price-row">
+                            <span class="price-value" id="detailPrice">50.000 đ</span>
+                            <span class="badge-receive"><i class="fas fa-check-circle"></i> Nhận file ngay</span>
+                        </div>
+                    </div>
+                    <div class="detail-specs">
+                        <div class="spec-item">
+                            <span class="spec-label">Số trang slide</span>
+                            <span class="spec-value" id="detailPages">19 Trang slide</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Tỷ lệ màn hình</span>
+                            <span class="spec-value" id="detailRatio">16:9 Full HD</span>
+                        </div>
+                    </div>
+                    <div class="detail-compat">
+                        <span class="compat-label">Tương thích phần mềm:</span>
+                        <span class="compat-value" id="detailCompat">PowerPoint, Google Slides, Canva</span>
+                    </div>
+                    <div class="detail-desc-section">
+                        <h4>CHI TIẾT NỘI DUNG & BỐ CỤC</h4>
+                        <div class="detail-desc" id="detailDesc">
+                            <!-- Description content -->
+                        </div>
+                    </div>
+                    <button class="btn btn-buy" id="btnBuyNow" onclick="openPaymentModal()">
+                        <i class="fas fa-shopping-cart"></i>
+                        Mua Ngay & Quét Mã Nhận File (VietQR)
+                    </button>
+                    <p class="buy-note">Tải file lập tức về máy tính sau khi chuyển khoản</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PAYMENT MODAL ===== -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal-content modal-payment">
+            <button class="modal-close" onclick="closePaymentModal()">&times;</button>
+            <div class="payment-header">
+                <span class="payment-badge"><i class="fas fa-qrcode"></i> Quét mã VietQR thanh toán tự động</span>
+                <h2 class="payment-title" id="paymentTitle">BẠO LỰC HỌC ĐƯỜNG</h2>
+                <p class="payment-order">Mã đơn hàng: <strong id="paymentOrderId">SLD61518</strong></p>
+            </div>
+            <div class="qr-section">
+                <div class="qr-box" id="qrBox">
+                    <img id="qrImage" src="" alt="VietQR Code">
+                </div>
+                <p class="qr-hint">Mở App Ngân hàng bất kỳ để quét mã QR</p>
+            </div>
+            <div class="payment-details">
+                <div class="pay-row">
+                    <span>Số tiền cần thanh toán:</span>
+                    <strong class="pay-amount" id="payAmount">30.000đ</strong>
+                </div>
+                <div class="pay-row">
+                    <span>Nội dung chuyển khoản (Memo):</span>
+                    <div class="memo-box">
+                        <strong id="payMemo">SLD61518</strong>
+                        <button class="btn-copy" onclick="copyMemo()"><i class="fas fa-copy"></i> Copy</button>
+                    </div>
+                </div>
+                <div class="pay-row">
+                    <span>Ngân hàng thụ hưởng:</span>
+                    <strong id="payBank">MB Bank (Quân Đội)</strong>
+                </div>
+                <div class="pay-row">
+                    <span>Số tài khoản:</span>
+                    <strong id="payAccountNum">0988889999</strong>
+                </div>
+                <div class="pay-row">
+                    <span>Chủ tài khoản:</span>
+                    <strong id="payAccountName">NGUYEN VAN QUAN</strong>
+                </div>
+            </div>
+            <div class="payment-status" id="paymentStatus">
+                <div class="status-waiting" id="statusWaiting">
+                    <div class="spinner"></div>
+                    <p>Đang lắng nghe biến động số dư từ ngân hàng... File tải sẽ xuất hiện ngay khi tiền vào!</p>
+                </div>
+                <div class="status-success" id="statusSuccess" style="display:none;">
+                    <i class="fas fa-check-circle"></i>
+                    <p>Thanh toán thành công! File đã sẵn sàng tải về.</p>
+                    <a href="#" id="downloadLink" class="btn btn-download" target="_blank">
+                        <i class="fas fa-download"></i> Tải File Slide Ngay
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ADMIN LOGIN MODAL ===== -->
+    <div class="modal-overlay" id="adminLoginModal">
+        <div class="modal-content modal-login">
+            <button class="modal-close" onclick="closeAdminLogin()">&times;</button>
+            <div class="login-content">
+                <div class="login-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h2>Đăng Nhập Quản Trị</h2>
+                <p>Nhập mật khẩu để truy cập bảng quản trị cửa hàng</p>
+                <div class="form-group">
+                    <div class="password-input-wrap">
+                        <input type="password" id="adminPassword" placeholder="Nhập mật khẩu quản trị..." onkeydown="if(event.key==='Enter') verifyAdmin()">
+                        <button class="toggle-pw" onclick="togglePassword()"><i class="fas fa-eye"></i></button>
+                    </div>
+                </div>
+                <p class="login-error" id="loginError" style="display:none;">Mật khẩu không chính xác!</p>
+                <button class="btn btn-primary btn-full" onclick="verifyAdmin()">
+                    <i class="fas fa-sign-in-alt"></i> Đăng Nhập
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 SlidePro STORE - Template Thuyết Trình Bản Quyền. Mọi quyền được bảo lưu.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
