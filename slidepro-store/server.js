@@ -18,6 +18,11 @@ if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
+// GitHub Auto-Sync Configuration
+const GITHUB_REPO = 'quan121528-prog/Slide.store';
+const GITHUB_FILE_PATH = 'slidepro-store/data/store.json';
+let activeGithubToken = process.env.GITHUB_TOKEN || '';
+
 // Initial seed data
 function getDefaultData() {
     return {
@@ -28,6 +33,7 @@ function getDefaultData() {
             owner: 'DUONG BA HAI QUAN'
         },
         pantryId: '',
+        githubToken: '',
         paidOrders: {},
         slides: [
             {
@@ -82,8 +88,58 @@ function getDefaultData() {
     };
 }
 
-// ===== CLOUD STORAGE INTEGRATION (Pantry Cloud) =====
-let activePantryId = process.env.PANTRY_ID || '';
+// ===== TỰ ĐỘNG GHI THẲNG VÀO GITHUB (LƯU VĨNH VIỄN 100%) =====
+async function syncToGitHub(data, token) {
+    const t = token || activeGithubToken;
+    if (!t) return false;
+    try {
+        const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`;
+        const headers = {
+            'Authorization': `token ${t}`,
+            'User-Agent': 'SlidePro-App',
+            'Accept': 'application/vnd.github.v3+json'
+        };
+
+        // 1. Lấy SHA hiện tại của file
+        let sha = null;
+        try {
+            const getRes = await fetch(url, { headers });
+            if (getRes.ok) {
+                const fileInfo = await getRes.json();
+                sha = fileInfo.sha;
+            }
+        } catch (e) {}
+
+        // 2. Commit nội dung mới lên GitHub
+        const contentStr = JSON.stringify(data, null, 2);
+        const base64Content = Buffer.from(contentStr, 'utf8').toString('base64');
+
+        const putRes = await fetch(url, {
+            method: 'PUT',
+            headers,
+            body: JSON.stringify({
+                message: 'Auto-sync: update slides & images to GitHub',
+                content: base64Content,
+                sha: sha || undefined,
+                branch: 'main'
+            })
+        });
+
+        if (putRes.ok) {
+            console.log('=> ĐÃ LƯU THẲNG VÀO GITHUB THÀNH CÔNG VĨNH VIỄN!');
+            return true;
+        } else {
+            const err = await putRes.text();
+            console.warn('Lỗi ghi GitHub API:', err);
+        }
+    } catch (err) {
+        console.warn('Lỗi kết nối GitHub:', err.message);
+    }
+    return false;
+}
+
+// ===== PANTRY CLOUD FALLBACK =====
+let activePantryId = process.env.PANTRY_ID || '01867b32-b480-44f9-9e78-4af1c70f986e';
 
 async function fetchFromPantry(id) {
     const targetId = id || activePantryId;
@@ -109,10 +165,7 @@ async function syncToPantry(data, id) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-        console.log('=> Đã đồng bộ dữ liệu lên Pantry Cloud thành công!');
-    } catch (e) {
-        console.warn('Lỗi khi lưu lên Pantry Cloud:', e.message);
-    }
+    } catch (e) {}
 }
 
 // Read store helper
@@ -127,6 +180,7 @@ function readStore() {
         const parsed = JSON.parse(raw);
         if (!parsed.paidOrders) parsed.paidOrders = {};
         if (parsed.pantryId && !activePantryId) activePantryId = parsed.pantryId;
+        if (parsed.githubToken && !activeGithubToken) activeGithubToken = parsed.githubToken;
         return parsed;
     } catch (err) {
         console.error('Lỗi khi đọc file store.json:', err);
@@ -138,7 +192,13 @@ function readStore() {
 function writeStore(data) {
     try {
         fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
-        // Đồng bộ ngầm lên đám mây nếu có cấu hình
+        
+        // 1. Tự động commit thẳng lên GitHub (LƯU VĨNH VIỄN)
+        if (data.githubToken || activeGithubToken) {
+            syncToGitHub(data, data.githubToken || activeGithubToken).catch(() => {});
+        }
+        
+        // 2. Dự phòng đám mây Pantry
         if (data.pantryId || activePantryId) {
             syncToPantry(data, data.pantryId || activePantryId).catch(() => {});
         }
@@ -149,28 +209,6 @@ function writeStore(data) {
     }
 }
 
-// Khôi phục tự động từ đám mây khi khởi động
-(async () => {
-    try {
-        const store = readStore();
-        const pId = store.pantryId || activePantryId;
-        if (pId) {
-            console.log('Đang kiểm tra dữ liệu từ đám mây Pantry...');
-            const cloudData = await fetchFromPantry(pId);
-            if (cloudData && Array.isArray(cloudData.slides) && cloudData.slides.length > 0) {
-                // Đảm bảo không mất mật khẩu và ngân hàng
-                store.slides = cloudData.slides;
-                if (cloudData.bank) store.bank = cloudData.bank;
-                if (cloudData.paidOrders) store.paidOrders = cloudData.paidOrders;
-                fs.writeFileSync(DATA_FILE, JSON.stringify(store, null, 2), 'utf8');
-                console.log(`=> ĐÃ KHÔI PHỤC THÀNH CÔNG ${store.slides.length} SLIDE TỪ ĐÁM MÂY KHI KHỞI ĐỘNG!`);
-            }
-        }
-    } catch (err) {
-        console.warn('Khởi động đám mây:', err.message);
-    }
-})();
-
 // ===== API ROUTES =====
 
 // 1. Lấy dữ liệu công khai (dành cho cả máy khách & admin)
@@ -180,12 +218,13 @@ app.get('/api/data', (req, res) => {
         success: true,
         slides: store.slides || [],
         bank: store.bank || { code: 'MB', account: '0365781696', owner: 'DUONG BA HAI QUAN' },
-        pantryId: store.pantryId || activePantryId || ''
+        pantryId: store.pantryId || activePantryId || '',
+        hasGithubSync: !!activeGithubToken
     });
 });
 
 // 2. Lưu danh sách slides (đồng bộ máy khách và lưu vĩnh viễn trên server)
-app.post('/api/slides', (req, res) => {
+app.post('/api/slides', async (req, res) => {
     const { slides } = req.body;
     if (!Array.isArray(slides)) {
         return res.status(400).json({ success: false, message: 'Dữ liệu slides không hợp lệ!' });
@@ -222,7 +261,6 @@ app.post('/api/pantry', async (req, res) => {
     activePantryId = store.pantryId;
 
     if (writeStore(store)) {
-        // Đồng bộ dữ liệu hiện tại lên Pantry ngay lập tức
         if (activePantryId) {
             await syncToPantry(store, activePantryId);
         }
