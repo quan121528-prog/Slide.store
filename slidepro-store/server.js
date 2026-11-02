@@ -97,20 +97,20 @@ async function syncToGitHub(data, token) {
         const headers = {
             'Authorization': `token ${t}`,
             'User-Agent': 'SlidePro-App',
-            'Accept': 'application/vnd.github.v3+json'
+            'Accept': 'application/vnd.github.v3+json',
+            'Cache-Control': 'no-cache, no-store'
         };
 
-        // 1. Lấy SHA hiện tại của file
+        // Lấy SHA mới nhất từ GitHub (thêm timestamp tránh GitHub trả cache cũ gây lỗi 409)
         let sha = null;
         try {
-            const getRes = await fetch(url, { headers });
+            const getRes = await fetch(`${url}?t=${Date.now()}`, { headers });
             if (getRes.ok) {
                 const fileInfo = await getRes.json();
                 sha = fileInfo.sha;
             }
         } catch (e) {}
 
-        // 2. Commit nội dung mới lên GitHub
         const contentStr = JSON.stringify(data, null, 2);
         const base64Content = Buffer.from(contentStr, 'utf8').toString('base64');
 
@@ -129,6 +129,25 @@ async function syncToGitHub(data, token) {
             console.log('=> ĐÃ LƯU THẲNG VÀO GITHUB THÀNH CÔNG VĨNH VIỄN!');
             return true;
         } else {
+            // Nếu bị xung đột sha (409), thử lại lần 2 với sha mới nhất
+            const getRes2 = await fetch(`${url}?t=${Date.now()}`, { headers });
+            if (getRes2.ok) {
+                const fileInfo2 = await getRes2.json();
+                const retryPut = await fetch(url, {
+                    method: 'PUT',
+                    headers,
+                    body: JSON.stringify({
+                        message: 'Auto-sync: update slides & images to GitHub (retry)',
+                        content: base64Content,
+                        sha: fileInfo2.sha,
+                        branch: 'main'
+                    })
+                });
+                if (retryPut.ok) {
+                    console.log('=> ĐÃ LƯU THẲNG VÀO GITHUB THÀNH CÔNG (sau khi lấy lại SHA)!');
+                    return true;
+                }
+            }
             const err = await putRes.text();
             console.warn('Lỗi ghi GitHub API:', err);
         }
